@@ -1,0 +1,40 @@
+<div class='result-container'>
+  {{#if details.searchedIps.ip}}
+    <div>
+      <span class='p-key'>IP Address: </span>
+      <span class='p-value'>{{details.searchedIps.ip}}</span>
+    </div>
+  {{/if}}
+  {{#if details.searchedIps.ports.length}}
+    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Ports </h1>
+    {{#each details.searchedIps.ports as |port|}}
+      <span class='section-tag'>{{port}}</span>
+    {{/each}}
+  {{/if}}
+  {{#if details.searchedIps.tags.length}}
+    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Tags </h1>
+    {{#each details.searchedIps.tags as |tag|}}
+      <span class='section-tag'>{{tag}}</span>
+    {{/each}}
+  {{/if}}
+  {{#if details.searchedIps.cpes.length}}
+    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}}
+      Common Platform Enumerations (CPEs)
+    </h1>
+    {{#each details.searchedIps.cpes as |cpe|}}
+      <span class='section-tag'>{{cpe}}</span>
+    {{/each}}
+  {{/if}}
+  {{#if details.searchedIps.vulns.length}}
+    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Vulnerabilities </h1>
+    {{#each details.searchedIps.vulns as |vuln|}}
+      <span class='section-tag'>{{vuln}}</span>
+    {{/each}}
+  {{/if}}
+  {{#if details.searchedIps.hostnames.length}}
+    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Host Names </h1>
+    {{#each details.searchedIps.hostnames as |hostname|}}
+      <span class='section-tag'>{{hostname}}</span>
+    {{/each}}
+  {{/if}}
+</div>
