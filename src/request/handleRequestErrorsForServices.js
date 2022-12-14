@@ -4,8 +4,6 @@ const { parseErrorToReadableJSON } = require('../../src/dataTransformations');
 
 const handleRequestErrorsForServices =
   (requestWithDefaultsBuilder) => async (error, requestOptions) => {
-    const { Logger } = require('../../integration');
-
     return await get(requestOptions.site, authenticationProcessBySite)(
       error,
       requestOptions,
@@ -13,7 +11,7 @@ const handleRequestErrorsForServices =
     );
   };
 
-const ignoreErrorSpecialNotFoundResponses = async (error, requestOptions) => {
+const ignoreErrorSpecialNotFoundResponses = async (error) => {
   const err = parseErrorToReadableJSON(error);
   const isNotFoundError = flow(get('status'), eq(404))(err);
 

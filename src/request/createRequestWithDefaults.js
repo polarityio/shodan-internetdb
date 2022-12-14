@@ -38,8 +38,6 @@ const createRequestWithDefaults = () => {
 
     const _requestWithDefaults = (requestOptions) =>
       new Promise((resolve, reject) => {
-        const { Logger } = require('../../integration');
-        Logger(requestOptions, 'FFFFFFF', 'trace');
         defaultsRequest(requestOptions, (err, res, body) => {
           if (err) return reject(err);
           resolve({ ...res, body });

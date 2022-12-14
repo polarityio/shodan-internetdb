@@ -3,6 +3,8 @@ const { flow, get, size, find, eq, map } = require('lodash/fp');
 const createLookupResults = (entities, searchedIps, options) =>
   map((entity) => {
     const resultsForThisEntity = getResultsForThisEntity(entity, searchedIps, options);
+    // handles the case of an ip not being found, the response will be a 404, and an object with a detail property: 
+    // { detail: No information available' || 'Not Found' }
     const noInformationFound = resultsForThisEntity.searchedIps.detail ? true : false;
 
     const lookupResult = {
