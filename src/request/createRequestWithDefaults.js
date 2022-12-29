@@ -22,13 +22,8 @@ class PolarityRequest {
   constructor (options) {
     this.defaults = defaults;
     this.runRequestsInParallel = false; //this is set to true when we want to run multiple requests in parallel;
-    this.successfulCodes = [200, 404];
     (this.options = options), (this.requiresAuthentication = false);
   }
-  /**
-   * get
-   * @param {object} opts - request options.
-   */
   get = async (opts) => {
     const { Logger } = require('../../integration');
     const { entity, ...requestOptions } = opts;
@@ -36,38 +31,16 @@ class PolarityRequest {
 
     const response = await this.promisifyRequest({ method: 'GET', ...requestOptions });
     Logger(response, 'response', 'trace');
-    this.checkErrorStatus(response);
-    //will return the raw response returned from the API.
     return { entity, response };
   };
 
-  runRequestInParallel = async (requestsOptions, limit = 10) => {
-    const { parallelLimit } = require('async');
-    const { map } = require('lodash/fp');
-  };
-
-  checkErrorStatus = (response) => {
-    const { statusCode, body } = response;
-    //if its a 200 or 404, we don't want to throw an error
-    if (this.successfulCodes.includes(statusCode)) {
-      return;
-    }
-
-    const requestError = Error('Request Error');
-
-    requestError.status = statusCodeNotSuccessful ? statusCode : body.error;
-    requestError.detail = get(get('error', body), ERROR_MESSAGES);
-    requestError.description = JSON.stringify(body);
-    requestError.requestOptions = JSON.stringify(requestOptionsWithoutSensitiveData);
-
-    throw requestError;
-  };
+  // runRequestInParallel = async (requestsOptions, limit = 10) => {
+  //   const { parallelLimit } = require('async');
+  //   const { map } = require('lodash/fp');
+  // };
 
   promisifyRequest = (requestOptions) => {
     return new Promise((resolve, reject) => {
-      const { Logger } = require('../../integration');
-      Logger(requestOptions, 'requestOptions', 'trace');
-
       request(requestOptions, (err, res, body) => {
         if (err) return reject(err);
         resolve({ ...res, body });
@@ -81,24 +54,36 @@ class PolarityResponse {
     this.statusCode = apiResponse.response.statusCode;
     this.body = apiResponse.response.body;
     this.entity = apiResponse.entity;
+    this.successfulCodes = [200, 404];
   }
 
+  checkErrorStatus = () => {
+    if (!this.successfulCodes.includes(statusCode)) {
+      throw new RequestError('Request Failed', this.statusCode, this.body, {
+        headers: '********'
+      });
+    }
+  };
+
   getResultsForEntity = () => {
-    const { Logger } = require('../../integration');
-    Logger({ response: this }, 'Response', 'trace');
+    this.checkErrorStatus();
     return {
       entity: this.entity,
-      data: this.buildDetails(this.body)
+      data: this.hasEmptyDetails() ? this.emptyResults() : this.lookupResults(this.body)
     };
   };
 
-  buildDetails = () => {
-    return this.hasEmptyDetails() ? this.emptyResults() : this.lookupResults(this.body);
+  createSummary = () => {
+    return {
+      summary: summary,
+      details: null
+    };
   };
 
+  // Response formats for integrations
   lookupResults = (body) => {
     return {
-      summary: ['Summary'],
+      summary: this.createSummary(),
       details: body
     };
   };
@@ -113,6 +98,18 @@ class PolarityResponse {
   hasEmptyDetails = () => {
     this.statusCode === 404;
   };
+}
+
+class RequestError extends Error {
+  constructor (message, status, description, requestOptions) {
+    super(message);
+    this.name = 'requestError';
+    this.status = status;
+    this.description = description;
+    this.requestOptions = requestOptions;
+    this.source = '';
+    this.meta = null;
+  }
 }
 
 module.exports = { PolarityRequest, PolarityResponse };

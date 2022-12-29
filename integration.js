@@ -1,9 +1,6 @@
 'use strict';
 
-const {
-  splitOutIgnoredIps,
-  parseErrorToReadableJSON
-} = require('./src/dataTransformations');
+const { parseErrorToReadableJSON } = require('./src/dataTransformations');
 const { last, slice } = require('lodash/fp');
 const {
   PolarityRequest,
