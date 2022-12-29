@@ -4,17 +4,18 @@ const createRequestWithDefaults = require('./createRequestWithDefaults');
 
 const requestWithDefaults = createRequestWithDefaults();
 
+// going to return the raw response body
 const requestsInParallel = async (
   requestsOptions,
-  responseGetPath = 'body',
+  // responseGetPath = 'body',
   limit = 10
 ) => {
   const unexecutedRequestFunctions = map(
     ({ entity, ...requestOptions }) =>
       async () => {
         const { Logger } = require('../../integration');
-
-        const result = get(responseGetPath, await requestWithDefaults(requestOptions));
+        // const result = get(responseGetPath, await requestWithDefaults(requestOptions));
+        const result = await requestWithDefaults(requestOptions);
         Logger(result, 'result', 'trace');
         return entity ? { entity, result } : result;
       },

@@ -1,14 +1,17 @@
 'use strict';
 
-const getLookupResults = require('./src/getLookupResults');
 const {
   splitOutIgnoredIps,
-  standardizeEntityTypes,
   parseErrorToReadableJSON
 } = require('./src/dataTransformations');
-const { last, slice, concat } = require('lodash/fp');
+const { last, slice } = require('lodash/fp');
+const {
+  PolarityRequest,
+  PolarityResponse
+} = require('./src/request/createRequestWithDefaults');
 
 let logger = console;
+
 const startup = (_logger) => {
   logger = _logger;
 };
@@ -24,16 +27,13 @@ const Logger = (...args) => {
 };
 
 const doLookup = async (entities, options, cb) => {
-  Logger({ entities }, 'Entities', 'debug');
   try {
     Logger({ entities }, 'Entities', 'debug');
 
-    const { entitiesPartition, ignoredIpLookupResults } = splitOutIgnoredIps(entities);
-    const entitiesWithCustomTypesSpecified = standardizeEntityTypes(entitiesPartition);
-
-    const lookupResults = concat(
-      await getLookupResults(entitiesWithCustomTypesSpecified, options),
-      ignoredIpLookupResults
+    const lookupResults = await Promise.all(
+      entities.map(async (entity) => {
+        return await getLookupResults(entity, options);
+      })
     );
 
     Logger({ lookupResults }, 'Lookup Results', 'trace');
@@ -44,6 +44,19 @@ const doLookup = async (entities, options, cb) => {
     Logger({ error, formattedError: err }, 'Get Lookup Results Failed', 'error');
     cb({ detail: error.message || 'Lookup Failed', err });
   }
+};
+
+const getLookupResults = async (entity, options) => {
+  const polarityRequest = new PolarityRequest(options);
+
+  const shodanContextApiResponse = await polarityRequest.get({
+    entity,
+    uri: `${options.url}/${entity.value}`,
+    json: true
+  });
+
+  const polarityResponse = new PolarityResponse(shodanContextApiResponse);
+  return polarityResponse.getResultsForEntity();
 };
 
 module.exports = {
