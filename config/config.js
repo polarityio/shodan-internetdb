@@ -27,8 +27,8 @@ module.exports = {
   options: [
     {
       key: 'url',
-      name: 'Shodan InternetDB url',
-      description: 'Url for Shodan-InternetDB API',
+      name: 'Shodan InternetDB URL',
+      description: 'URL for Shodan InternetDB API',
       default: 'https://internetdb.shodan.io',
       type: 'text',
       userCanEdit: true,

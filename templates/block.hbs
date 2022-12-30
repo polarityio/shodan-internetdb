@@ -1,40 +1,40 @@
-<div class='result-container'>
+<div class="result-container">
   {{#if details.ip}}
     <div>
-      <span class='p-key'>IP Address: </span>
-      <span class='p-value'>{{details.ip}}</span>
+      <span class="p-key">IP Address: </span>
+      <span class="p-value">{{details.ip}}</span>
     </div>
   {{/if}}
   {{#if details.ports.length}}
-    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Ports </h1>
+    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Ports </h1>
     {{#each details.ports as |port|}}
-      <span class='section-tag'>{{port}}</span>
+      <span class="section-tag">{{port}}</span>
     {{/each}}
   {{/if}}
   {{#if details.tags.length}}
-    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Tags </h1>
+    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Tags </h1>
     {{#each details.tags as |tag|}}
-      <span class='section-tag'>{{tag}}</span>
+      <span class="section-tag">{{tag}}</span>
     {{/each}}
   {{/if}}
   {{#if details.cpes.length}}
-    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}}
+    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}}
       Common Platform Enumerations (CPEs)
     </h1>
     {{#each details.cpes as |cpe|}}
-      <span class='section-tag'>{{cpe}}</span>
+      <span class="section-tag">{{cpe}}</span>
     {{/each}}
   {{/if}}
   {{#if details.vulns.length}}
-    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Vulnerabilities </h1>
+    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Vulnerabilities </h1>
     {{#each details.vulns as |vuln|}}
-      <span class='section-tag'>{{vuln}}</span>
+      <span class="section-tag">{{vuln}}</span>
     {{/each}}
   {{/if}}
   {{#if details.hostnames.length}}
-    <h1 class='p-title'>{{fa-icon 'th-large' fixedWidth=true}} Host Names </h1>
+    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Host Names </h1>
     {{#each details.hostnames as |hostname|}}
-      <span class='section-tag'>{{hostname}}</span>
+      <span class="section-tag">{{hostname}}</span>
     {{/each}}
   {{/if}}
 </div>
