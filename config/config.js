@@ -1,8 +1,9 @@
 module.exports = {
   name: 'Shodan InternetDB',
-  acronym: 'SHODB',
-  description: '',
-  entityTypes: ['*'],
+  acronym: 'SHO-DB',
+  description:
+    'Shodan InternetDB provides a fast way to see the open ports for an IP address',
+  entityTypes: ['IPv4'],
   styles: ['./styles/styles.less'],
   defaultColor: 'light-blue',
   block: {
@@ -23,16 +24,5 @@ module.exports = {
   },
   logging: {
     level: 'info' //trace, debug, info, warn, error, fatal
-  },
-  options: [
-    {
-      key: 'url',
-      name: 'Shodan InternetDB url',
-      description: 'Url for Shodan-InternetDB API',
-      default: 'https://internetdb.shodan.io',
-      type: 'text',
-      userCanEdit: true,
-      adminOnly: false
-    }
-  ]
+  }
 };

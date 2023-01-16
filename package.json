@@ -1,13 +1,18 @@
 {
   "main": "./integration.js",
   "name": "shodan-internetdb",
-  "version": "3.0.1-beta",
+  "version": "3.0.0",
   "private": true,
   "license": "MIT",
   "author": "Polarity",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "async": "^3.2.4",
-    "lodash": "^4.17.21",
     "postman-request": "^2.88.1-postman.31"
+  },
+  "devDependencies": {
+    "jest": "28.1.3"
   }
 }

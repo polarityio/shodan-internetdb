@@ -23,7 +23,6 @@ dependency-reduced-pom.xml
 *.log
 *.remote-sync.json
 
-
 # Ignore Generated HTML README Files
 README.html
 
@@ -33,3 +32,9 @@ test-runner.js
 ~
 .polarity.conf
 test.js
+
+#Ignore VSCode
+*.history
+.histoy
+*.vscode
+.vscode

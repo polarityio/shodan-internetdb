@@ -1,53 +1,69 @@
 'use strict';
 
-const getLookupResults = require('./src/getLookupResults');
-const {
-  splitOutIgnoredIps,
-  standardizeEntityTypes,
-  parseErrorToReadableJSON
-} = require('./src/dataTransformations');
-const { last, slice, concat } = require('lodash/fp');
+const { setLogger } = require('./src/logger');
+const { parseErrorToReadableJSON, ApiRequestError } = require('./src/errors');
+const polarityRequest = require('./src/polarity-request');
+const { createResultObject } = require('./src/create-result-object')
 
-let logger = console;
-const startup = (_logger) => {
-  logger = _logger;
+const SUCCESS_CODES = [200, 404];
+
+let Logger = null;
+
+const startup = (logger) => {
+  Logger = logger;
+  setLogger(Logger);
 };
 
-const Logger = (...args) => {
-  const lastArg = last(args);
-  const lastArgIsLevel = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'].includes(
-    lastArg
-  );
-  const loggingLevel = lastArgIsLevel ? lastArg : 'info';
-  const logArgs = lastArgIsLevel ? slice(0, -1, args) : args;
-  logger[loggingLevel](...logArgs);
-};
-
+/**
+ * forEach entity
+ *   MakeNetworkRequest1 -- Makes the network request, handles network errors only, returns raw network response
+ *   HandleAPIErrors -- handles error handling of the API response
+ *   CreateResultObject -- Handles any processing of the raw network response, creates a resultObject or resultMissObject
+ *
+ * @param entities
+ * @param options
+ * @param cb
+ * @returns {Promise<void>}
+ */
 const doLookup = async (entities, options, cb) => {
-  Logger({ entities }, 'Entities', 'debug');
   try {
-    Logger({ entities }, 'Entities', 'debug');
+    Logger.trace({ entities }, 'doLookup');
 
-    const { entitiesPartition, ignoredIpLookupResults } = splitOutIgnoredIps(entities);
-    const entitiesWithCustomTypesSpecified = standardizeEntityTypes(entitiesPartition);
+    const lookupResults = await Promise.all(
+      entities.map(async (entity) => {
+        // Make network request
+        const apiResponse = await polarityRequest.request({
+          uri: `https://internetdb.shodan.io/${entity.value}`
+        });
 
-    const lookupResults = concat(
-      await getLookupResults(entitiesWithCustomTypesSpecified, options),
-      ignoredIpLookupResults
+        Logger.trace({ apiResponse }, 'Lookup API Response');
+
+        // Handle API errors
+        if (!SUCCESS_CODES.includes(apiResponse.statusCode)) {
+          throw new ApiRequestError(
+            `Unexpected status code ${apiResponse.statusCode} received when making request to Shodan Context API`,
+            {
+              statusCode: apiResponse.statusCode,
+              requestOptions: apiResponse.requestOptions
+            }
+          );
+        }
+
+        // Create the Result Object
+        return createResultObject(entity, apiResponse);
+      })
     );
 
-    Logger({ lookupResults }, 'Lookup Results', 'trace');
+    Logger.trace({ lookupResults }, 'Lookup Results');
     cb(null, lookupResults);
   } catch (error) {
-    const err = parseErrorToReadableJSON(error);
-
-    Logger({ error, formattedError: err }, 'Get Lookup Results Failed', 'error');
-    cb({ detail: error.message || 'Lookup Failed', err });
+    const errorAsPojo = parseErrorToReadableJSON(error);
+    Logger.error({ error: errorAsPojo }, 'Error in doLookup');
+    cb(error);
   }
 };
 
 module.exports = {
   startup,
-  doLookup,
-  Logger
+  doLookup
 };
