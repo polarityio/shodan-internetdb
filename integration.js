@@ -1,9 +1,11 @@
 'use strict';
 
-const { parseErrorToReadableJSON } = require('./src/dataTransformations');
-const PolarityRequest = require('./src/polarityRequest');
-const PolarityResponse = require('./src/polarityResponse');
 const { setLogger } = require('./src/logger');
+const { parseErrorToReadableJSON, ApiRequestError } = require('./src/errors');
+const polarityRequest = require('./src/polarity-request');
+const { createResultObject } = require('./src/create-result-object')
+
+const SUCCESS_CODES = [200, 404];
 
 let Logger = null;
 
@@ -12,41 +14,56 @@ const startup = (logger) => {
   setLogger(Logger);
 };
 
+/**
+ * forEach entity
+ *   MakeNetworkRequest1 -- Makes the network request, handles network errors only, returns raw network response
+ *   HandleAPIErrors -- handles error handling of the API response
+ *   CreateResultObject -- Handles any processing of the raw network response, creates a resultObject or resultMissObject
+ *
+ * @param entities
+ * @param options
+ * @param cb
+ * @returns {Promise<void>}
+ */
 const doLookup = async (entities, options, cb) => {
   try {
-    Logger.trace({ entities }, 'Entities', 'debug');
+    Logger.trace({ entities }, 'doLookup');
 
     const lookupResults = await Promise.all(
       entities.map(async (entity) => {
-        return await getLookupResults(entity, options);
+        // Make network request
+        const apiResponse = await polarityRequest.request({
+          uri: `https://internetdb.shodan.io/${entity.value}`
+        });
+
+        Logger.trace({ apiResponse }, 'Lookup API Response');
+
+        // Handle API errors
+        if (!SUCCESS_CODES.includes(apiResponse.statusCode)) {
+          throw new ApiRequestError(
+            `Unexpected status code ${apiResponse.statusCode} received when making request to Shodan Context API`,
+            {
+              statusCode: apiResponse.statusCode,
+              requestOptions: apiResponse.requestOptions
+            }
+          );
+        }
+
+        // Create the Result Object
+        return createResultObject(entity, apiResponse);
       })
     );
 
-    Logger.trace({ lookupResults }, 'Lookup Results', 'trace');
+    Logger.trace({ lookupResults }, 'Lookup Results');
     cb(null, lookupResults);
   } catch (error) {
-    const err = parseErrorToReadableJSON(error);
-
-    Logger.trace({ error, formattedError: err }, 'Get Lookup Results Failed', 'error');
-    cb({ detail: error.message || 'Lookup Failed', err });
+    const errorAsPojo = parseErrorToReadableJSON(error);
+    Logger.error({ error: errorAsPojo }, 'Error in doLookup');
+    cb(error);
   }
-};
-
-const getLookupResults = async (entity, options) => {
-  const shodanContextApiRequest = new PolarityRequest(options);
-
-  const shodanContextApiResponse = await shodanContextApiRequest.get({
-    entity,
-    uri: `${options.url}/${entity.value}`,
-    json: true
-  });
-
-  const polarityResponse = new PolarityResponse(shodanContextApiResponse);
-  return polarityResponse.getResultsForEntity();
 };
 
 module.exports = {
   startup,
-  doLookup,
-  Logger
+  doLookup
 };

@@ -1,8 +1,8 @@
 module.exports = {
   name: 'Shodan InternetDB',
-  acronym: 'SHODB',
+  acronym: 'SHO-DB',
   description: '',
-  entityTypes: ['*'],
+  entityTypes: ['IPv4'],
   styles: ['./styles/styles.less'],
   defaultColor: 'light-blue',
   block: {
@@ -23,16 +23,5 @@ module.exports = {
   },
   logging: {
     level: 'info' //trace, debug, info, warn, error, fatal
-  },
-  options: [
-    {
-      key: 'url',
-      name: 'Shodan InternetDB URL',
-      description: 'URL for Shodan InternetDB API',
-      default: 'https://internetdb.shodan.io',
-      type: 'text',
-      userCanEdit: true,
-      adminOnly: false
-    }
-  ]
+  }
 };

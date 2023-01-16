@@ -6,35 +6,45 @@
     </div>
   {{/if}}
   {{#if details.ports.length}}
-    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Ports </h1>
-    {{#each details.ports as |port|}}
-      <span class="section-tag">{{port}}</span>
-    {{/each}}
+    <h1 class="p-title">{{fa-icon icon="th-large" fixedWidth=true}} Ports ({{details.ports.length}})</h1>
+    <div class="scrollable-container">
+      {{#each details.ports as |port|}}
+        <span class="section-tag">{{port}}</span>
+      {{/each}}
+    </div>
   {{/if}}
   {{#if details.tags.length}}
-    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Tags </h1>
-    {{#each details.tags as |tag|}}
-      <span class="section-tag">{{tag}}</span>
-    {{/each}}
+    <h1 class="p-title">{{fa-icon icon="tags" fixedWidth=true}} Tags ({{details.tags.length}})</h1>
+    <div class="scrollable-container">
+      {{#each details.tags as |tag|}}
+        <span class="section-tag">{{tag}}</span>
+      {{/each}}
+    </div>
   {{/if}}
   {{#if details.cpes.length}}
-    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}}
-      Common Platform Enumerations (CPEs)
+    <h1 class="p-title">{{fa-icon icon="sd-card" fixedWidth=true}}
+      Common Platform Enumerations ({{details.cpes.length}})
     </h1>
-    {{#each details.cpes as |cpe|}}
-      <span class="section-tag">{{cpe}}</span>
-    {{/each}}
+    <div class="scrollable-container">
+      {{#each details.cpes as |cpe|}}
+        <span class="section-tag">{{cpe}}</span>
+      {{/each}}
+    </div>
   {{/if}}
   {{#if details.vulns.length}}
-    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Vulnerabilities </h1>
-    {{#each details.vulns as |vuln|}}
-      <span class="section-tag">{{vuln}}</span>
-    {{/each}}
+    <h1 class="p-title">{{fa-icon icon="band-aid" fixedWidth=true}} Vulnerabilities ({{details.vulns.length}})</h1>
+    <div class="scrollable-container">
+      {{#each details.vulns as |vuln|}}
+        <span class="section-tag">{{vuln}}</span>
+      {{/each}}
+    </div>
   {{/if}}
   {{#if details.hostnames.length}}
-    <h1 class="p-title">{{fa-icon "th-large" fixedWidth=true}} Host Names </h1>
-    {{#each details.hostnames as |hostname|}}
-      <span class="section-tag">{{hostname}}</span>
-    {{/each}}
+    <h1 class="p-title">{{fa-icon icon="desktop" fixedWidth=true}} Host Names ({{details.hostnames.length}})</h1>
+    <div class="scrollable-container">
+      {{#each details.hostnames as |hostname|}}
+        <span class="section-tag">{{hostname}}</span>
+      {{/each}}
+    </div>
   {{/if}}
 </div>

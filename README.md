@@ -1,16 +1,12 @@
 # Polarity Shodan InternetDB Integration
 
-![image](https://img.shields.io/badge/status-beta-green.svg)
+<img src="images/overlay.png" width="50%">
 
-The InternetDB API provides a fast way to see the open ports for an IP address. It gives a quick, at-a-glance view of the type of device that is running behind an IP address to help you make decisions based on the open ports.
+The Shodan InternetDB API provides a fast way to see the open ports for an IP address. It gives a quick, at-a-glance view of the type of device that is running behind an IP address to help you make decisions based on the open ports.
 
-To learn more about Shodan InternetDB, visit the [official website](__TODO__).
+In addition to open ports, Shodan InternetDB provides a list of vulnerabilities, cpes, hostnames and tags.  The API data is updated once a week. 
 
-## Shodan InternetDB Integration Options
-
-### Shodan InternetDB Url
-
-The URL for the Shodan InternetDB Context API.
+To learn more about Shodan InternetDB, visit the [official website](https://internetdb.shodan.io/).
 
 ## Installation Instructions
 
