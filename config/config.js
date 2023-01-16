@@ -1,7 +1,8 @@
 module.exports = {
   name: 'Shodan InternetDB',
   acronym: 'SHO-DB',
-  description: '',
+  description:
+    'Shodan InternetDB provides a fast way to see the open ports for an IP address',
   entityTypes: ['IPv4'],
   styles: ['./styles/styles.less'],
   defaultColor: 'light-blue',
