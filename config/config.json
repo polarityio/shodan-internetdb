@@ -1,4 +1,5 @@
 {
+  "polarityIntegrationUuid": "014a38b0-cce2-11ed-aeee-075d3490155d",
   "name": "Shodan InternetDB",
   "acronym": "SHO-DB",
   "description": "Shodan InternetDB provides a fast way to see the open ports for an IP address",
