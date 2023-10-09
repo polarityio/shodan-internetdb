@@ -1,6 +1,6 @@
 {
   "name": "shodan-internetdb",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "main": "./integration.js",
   "private": true,
   "license": "MIT",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "async": "^3.2.4",
-    "postman-request": "^2.88.1-postman.31"
+    "postman-request": "^2.88.1-postman.33"
   },
   "devDependencies": {
     "jest": "28.1.3"
