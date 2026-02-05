@@ -1,0 +1,46 @@
+{
+  "root": {
+    "path": "",
+    "on_null": "return_empty"
+  },
+  "pipeline": [
+    {
+      "op": "copy",
+      "from": "ip",
+      "to": "reduced_results.ip"
+    },
+    {
+      "op": "copy",
+      "from": "ports",
+      "to": "reduced_results.ports"
+    },
+    {
+      "op": "copy",
+      "from": "tags",
+      "to": "reduced_results.tags"
+    },
+    {
+      "op": "copy",
+      "from": "cpes",
+      "to": "reduced_results.cpes"
+    },
+    {
+      "op": "copy",
+      "from": "vulns",
+      "to": "reduced_results.vulns"
+    },
+    {
+      "op": "copy",
+      "from": "hostnames",
+      "to": "reduced_results.hostnames"
+    },
+    {
+      "op": "prune",
+      "strategy": "empty_values",
+      "target": "reduced_results"
+    }
+  ],
+  "output": {
+    "result": "$working.reduced_results"
+  }
+}

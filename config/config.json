@@ -27,5 +27,10 @@
   },
   "logging": {
     "level": "info"
+  },
+  "reducer": {
+    "details": {
+      "file": "./reducers/details.json"
+    }
   }
 }

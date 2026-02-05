@@ -1,0 +1,28 @@
+{
+  "ip": "8.8.8.8",
+  "ports": [
+    53,
+    443,
+    853,
+    8080,
+    8443
+  ],
+  "tags": [
+    "cloud",
+    "dns",
+    "google"
+  ],
+  "cpes": [
+    "cpe:/a:google:chrome",
+    "cpe:/o:linux:linux_kernel:5.10"
+  ],
+  "vulns": [
+    "CVE-2021-44228",
+    "CVE-2022-0778",
+    "CVE-2023-12345"
+  ],
+  "hostnames": [
+    "dns.google",
+    "google-public-dns-a.google.com"
+  ]
+}
